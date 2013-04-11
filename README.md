@@ -4,7 +4,15 @@ jScrollie is based almost entirely on http://code.google.com/p/scrollbarpaper/
 
 You can see a demo here: http://joevennix.github.com/jScrollie/
 
-== Version Log ==
+Fork info
+=========
+
+The original jScrollie doesn't support embedded scrollbars (i.e. it only works on the 'body' element).
+This version aims to fix this.
+
+Version Log
+===========
+
  *  April 26, 2011: v0.1
  *    - works on latest versions of Safari, Chrome, and FF
  *    - (timeout?) bug causes scroll to eventually become extremely 
