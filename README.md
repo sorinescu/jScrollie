@@ -15,13 +15,19 @@ Version Log
 
  *  April 26, 2011: v0.1
  *    - works on latest versions of Safari, Chrome, and FF
- *    - (timeout?) bug causes scroll to eventually become extremely 
+ *    - (timeout?) bug causes scroll to eventually become extremely
  *      sluggish on Chrome
  *  June 29, 2011:  v0.5
  *    - major code refactor, eliminated need for setTimeout call
  *    - works on IE8+, Safari 2+, FF3.0+, Chrome 1.0+
  *    - next release: embedded jScrollie rather than only around <body>
  *    - problems: no longer supports dynamic resizing (must do manually)
- *  
+ *  April 11, 2013: v0.6
+ *    - if jQuery mutate (http://www.jqui.net/jquery-projects/jquery-mutate-official/) 
+ *      is present, use it to monitor height changes and update scrollbar
+ *    - jScrollie can be added to any element, not only <body>
+ *    - added jScrollieUpdate function, to update scrollbar manually
+ *
+ *  @author Sorin Otescu
  *  @author Joe Vennix
  *  http://joevennix.com
