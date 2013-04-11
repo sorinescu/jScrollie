@@ -1,26 +1,29 @@
+div.jScrollieAll { 
+  /* Holds the complete jScrollie, including scrollbar */
+  position:relative;
+  width:100%;
+  height:100%;
+}
+
 div.jScrollieMetaContainer { 
-  /* MetaContainer takes up entire window */
+  /* MetaContainer takes up entire parent */
   position:absolute;
-  top:0;
-  bottom:0;
-  left:0;
-  right:0;
+  width:100%;
+  height:100%;
   overflow:hidden;
 }
 
 div.jScrollieContainer {
-  position: absolute;
-  z-index: 1;
-  top:0;
+  position:absolute;
   right:0;
-  bottom:0;
-  overflow:hidden;
+  z-index: 1;
+  height:100%;
   width:14px;
+  overflow:hidden;
 }
 
 div.jScrollieTrack {
   position: absolute;
-  top: 0;
   right: 0;
   height: 100%;
   cursor: pointer;
@@ -50,9 +53,9 @@ div.jScrollieDragBottom {
   width: 100%;
 }
 
-div.jScrollie { 
-  overflow-y:scroll;
+div.jScrollie {
   height:100%;
   width:110%;
+  overflow-y:scroll;
   overflow-x:hidden;
 }
