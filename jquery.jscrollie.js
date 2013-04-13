@@ -30,7 +30,7 @@
  *    - works on IE8+, Safari 2+, FF3.0+, Chrome 1.0+
  *    - next release: embedded jScrollie rather than only around <body>
  *    - problems: no longer supports dynamic resizing (must do manually)
- *  April 11, 2013: v0.6
+ *  April 13, 2013: v0.6
  *    - if jQuery mutate (http://www.jqui.net/jquery-projects/jquery-mutate-official/) 
  *      is present, use it to monitor height changes and update scrollbar
  *    - jScrollie can be added to any element, not only <body>
@@ -67,7 +67,7 @@
     // jScrollieMetaContainer is a <div> that wraps <body>'s contents.
     //   It is absolutely positioned to cover the entire window 
     // jScrollie <div> does the actual 'pushing' of the scroll bar (w=110%)
-    $el.wrapInner('<div class="jScrollieMetaContainer"><div class="jScrollie">');
+    $el.wrapInner('<div class="jScrollieMetaContainer"><div class="jScrollie"><div class="jScrollieContent">');
     // Insert the following HTML elements just before previous wrap
     var preWrap = $(
       '<div class="jScrollieContainer">' + // set WIDTH of bar on this element
@@ -87,12 +87,13 @@
     // "scrollData" holds variables we need to remember (track, clearer, etc)
     // remember our initial state
     this.scrollData = {
+      root       : $el,
       jScroll    : $('.jScrollieContainer', $el),
       track      : $('.jScrollieTrack', $el),
       drag       : $('.jScrollieDrag', $el),
       dragTop    : $('.jScrollieDragTop', $el),
       dragBottom : $('.jScrollieDragBottom', $el),
-      content    : $el,
+      content    : $('.jScrollieContent', $el),
       clearer    : clearer,
       scroller   : $('.jScrollie', $el)
     };
@@ -101,14 +102,34 @@
 
     // if JQuery.Mutate is present, monitor height changes to the root element
     // and update the scrollbar size and visibility
-    if ($.fn.mutate) {
-      $el.mutate('scrollHeight',function (el,info) {
-        $(el).jScrollieUpdate();
-      }
-    }
+    if ($.fn.mutate)
+        this.scrollData.content.mutate('scrollHeight',function () {
+        $el.jScrollieUpdate();
+      });
   }
 
   JScrollie.prototype = {
+    nativeSize: undefined,
+
+    scrollbarSize: function() {
+      if (this.nativeSize === undefined) {
+        var div = $(
+            '<div class="jScrollie" style="width:50px;height:50px;'
+          + 'position:absolute;top:-200px;left:-200px;"><div style="height:100px;width:100%">'
+          + '</div></div>'
+        );
+
+        $('body').append(div);
+        var w1 = $(div).innerWidth();
+        var w2 = $('div', div).innerWidth();
+        $(div).remove();
+
+        this.nativeSize = w1 - w2;
+      }
+
+      return this.nativeSize;
+    },
+
     // set up listeners for scroll/click/drag events
     checkRefresh: function() {
       console.log('checking refresh')
@@ -118,7 +139,7 @@
     update: function() {
       // called when a scroll, drag, or click is detected that requires a repaint
       var scrollData = this.scrollData;
-      var $el = scrollData.content;
+      var $el = scrollData.root;
       var contentHeight = scrollData.clearer.position().top - 
                           scrollData.content.position().top;
       // save current height/content height
@@ -130,8 +151,11 @@
 
       //When you click the track, the scrollbar "jumps" to your mouse
       var ratio = this.scrollData.scroller.height() / contentHeight;
+      var margin = -this.scrollbarSize();
       
       if (ratio < 1) { //content is big enough to show the scrollbar
+        scrollData.scroller.css('margin-right', margin+'px');
+        scrollData.content.addClass('Scrollbar');
         scrollData.jScroll.show();
         scrollData.jScroll.height(scrollData.scroller.height());
         var offset = scrollData.scroller.offset();
@@ -140,7 +164,7 @@
         scrollData.drag.height(dragHeight);
 
         var self = this;
-        // Listen for scorll event
+        // Listen for scroll event
         scrollData.scroller.scroll(function(event) {
           self.scrollData.drag.css('top', Math.min(
                           Math.round(self.scrollData.scroller.scrollTop() * ratio), 
@@ -171,7 +195,9 @@
         });
       } else {
         //content is small enough to hide the scroll bar
-        this.scrollData.jScroll.hide();
+        scrollData.scroller.css('margin-right', 0);
+        scrollData.jScroll.hide();
+        scrollData.content.removeClass('Scrollbar');
       }
     }
   }  

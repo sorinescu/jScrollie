@@ -13,6 +13,45 @@ div.jScrollieMetaContainer {
   overflow:hidden;
 }
 
+div.jScrollie {
+  /* a negative margin is applied in the js, making the div 
+     100%+<native scrollbar width>px wide */
+  position:relative;
+  height:100%;
+  overflow-y:scroll;
+  overflow-x:hidden;
+}
+
+/** A bug in Chrome 25 on Lion requires each selector to have their own
+    blocks. E.g. the following:
+
+    .antiscroll-inner::-webkit-scrollbar, .antiscroll-inner::scrollbar {...}
+
+    causes the width and height rules to be ignored by the browser resulting
+    in both native and antiscroll scrollbars appearing at the same time.
+
+    Adapted from https://github.com/LearnBoost/antiscroll
+ */
+div.jScrollie::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+div.jScrollie::scrollbar {
+  width: 0;
+  height: 0;
+}
+
+div.jScrollieContent {
+  position:absolute;
+  left:0;
+}
+
+div.jScrollieContent.Scrollbar {
+  /* applied when the scrollbar is visible */
+  right:14px;
+}
+
 div.jScrollieContainer {
   position:absolute;
   right:0;
@@ -51,11 +90,4 @@ div.jScrollieDragBottom {
   position: absolute;
   bottom: 5px;
   width: 100%;
-}
-
-div.jScrollie {
-  height:100%;
-  width:110%;
-  overflow-y:scroll;
-  overflow-x:hidden;
 }
